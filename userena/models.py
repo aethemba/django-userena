@@ -125,7 +125,7 @@ class UserenaSignup(models.Model):
                   'site': Site.objects.get_current()}
 
 
-        # Email to the old address
+        # Email to the old address, if present
         subject_old = render_to_string('userena/emails/confirmation_email_subject_old.txt',
                                        context)
         subject_old = ''.join(subject_old.splitlines())
