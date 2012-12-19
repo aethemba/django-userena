@@ -19,6 +19,9 @@ from easy_thumbnails.fields import ThumbnailerImageField
 
 import datetime, random
 
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+
 PROFILE_PERMISSIONS = (
             ('view_profile', 'Can view profile'),
 )
@@ -133,10 +136,14 @@ class UserenaSignup(models.Model):
         message_old = render_to_string('userena/emails/confirmation_email_message_old.txt',
                                        context)
         if self.user.email:
-            send_mail(subject_old,
+            try:
+                validate_email(self.user.email)
+                send_mail(subject_old,
                       message_old,
                       settings.DEFAULT_FROM_EMAIL,
                     [self.user.email])
+            except ValidationError:
+                pass
 
         # Email to the new address
         subject_new = render_to_string('userena/emails/confirmation_email_subject_new.txt',
